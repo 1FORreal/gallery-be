@@ -16,7 +16,7 @@ public class FileService {
     private final File directory;
 
     public FileService() {
-        directory = new File("D:\\Programming\\gallery\\gallery\\src\\main\\resources\\imgs");
+        directory = new File("D:\\Programming\\gallery-origin\\src\\main\\resources\\imgs");
     }
 
     public void init() {}
