@@ -33,6 +33,7 @@ public class PhotoService {
         return photos;
     }
 
+
     public List<Photo> findAllPhotosSortedByTitle(Order order) {
         Sort sortingOrder = Sort.by("title");
 

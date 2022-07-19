@@ -17,9 +17,14 @@ public class FileService {
 
     public FileService() {
         directory = new File("D:\\Programming\\gallery-origin\\src\\main\\resources\\imgs");
+
+        this.init();
     }
 
-    public void init() {}
+    private void init() {
+        if(!directory.exists())
+            directory.mkdir();
+    }
 
     public File findFile(String fileId) {
         List<String> filenames = List.of(this.directory.list());
