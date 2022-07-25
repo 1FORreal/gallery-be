@@ -33,6 +33,25 @@ public class PhotoService {
         return photos;
     }
 
+    public List<Photo> findAllPhotosByWordsInTitle(List<String> words) {
+        List<Photo> photos = new ArrayList();
+        List<Photo> allPhotos = this.findAllPhotos();
+
+        for(Photo photo : allPhotos)
+            for(String word : words) {
+                if (photos.contains(photo))
+                    continue;
+
+                if (photo.getTitle().contains(word)) {
+                    photos.add(photo);
+                    break;
+                }
+            }
+
+
+        return photos;
+    }
+
 
     public List<Photo> findAllPhotosSortedByTitle(Order order) {
         Sort sortingOrder = Sort.by("title");

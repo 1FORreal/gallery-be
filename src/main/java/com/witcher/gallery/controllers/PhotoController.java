@@ -5,9 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.witcher.gallery.dtos.PhotoDTO;
 import com.witcher.gallery.enums.Order;
 import com.witcher.gallery.models.Photo;
-import com.witcher.gallery.services.FileService;
 import com.witcher.gallery.services.PhotoService;
-import com.witcher.gallery.util.OrderMapper;
+import com.witcher.gallery.util.MyMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,20 +23,20 @@ public class PhotoController {
     private final PhotoService photoService;
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
-    private final OrderMapper orderMapper;
+    private final MyMapper myMapper;
 
     @Autowired
     public PhotoController(
             PhotoService photoService,
             ModelMapper modelMapper,
             ObjectMapper objectMapper,
-            OrderMapper orderMapper
+            MyMapper orderMapper
     ) {
         this.photoService = photoService;
 
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
-        this.orderMapper = orderMapper;
+        this.myMapper = orderMapper;
     }
 
     @GetMapping
@@ -52,6 +51,16 @@ public class PhotoController {
         return responseEntity;
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<HttpStatus> getSomePhotosWithWordsInTitle(
+            @RequestParam(name="words") List<String> words
+    ) {
+        List<Photo> photos = this.photoService.findAllPhotosByWordsInTitle(words);
+        ResponseEntity responseEntity = new ResponseEntity(photos, HttpStatus.OK);
+
+        return responseEntity;
+    }
+
     @GetMapping("/sorted")
     public ResponseEntity<HttpStatus> getAllPhotosSortedByTitle(
             @RequestParam(name="sorting", required = false) String order
@@ -61,7 +70,7 @@ public class PhotoController {
         if(order == null)
             defaultOrder = Order.ASCENDING;
         else
-            defaultOrder = this.orderMapper.convertToOrder(order);
+            defaultOrder = this.myMapper.convertToOrder(order);
 
 
         List<Photo> photos = this.photoService.findAllPhotosSortedByTitle(defaultOrder);

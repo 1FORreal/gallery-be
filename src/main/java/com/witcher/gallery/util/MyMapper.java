@@ -4,11 +4,12 @@ import com.witcher.gallery.enums.Order;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrderMapper {
+public class MyMapper {
 
-    public OrderMapper() {}
+    public MyMapper() {}
 
     public Order convertToOrder(String s) {
         return Order.valueOf(s);
     }
+
 }
