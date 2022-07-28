@@ -1,31 +1,29 @@
 package com.witcher.gallery.controllers;
 
-import com.witcher.gallery.services.FileService;
+import com.witcher.gallery.services.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/files")
 public class FileController {
-    private final FileService fileService;
+    private final StorageService storageService;
 
     @Autowired
-    public FileController(FileService fileService) {
-        this.fileService = fileService;
+    public FileController(StorageService storageService) {
+        this.storageService = storageService;
     }
 
-    @GetMapping("/{file_id}")
+    @GetMapping("/{filename}")
     public ResponseEntity<HttpStatus> getFile(
-            @PathVariable("file_id") String fileId
+            @PathVariable("filename") String filename
     ) {
-        InputStreamResource resource = new InputStreamResource(this.fileService.load(fileId));
+        Resource resource = storageService.loadFile(filename);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type","image/jpeg");
 

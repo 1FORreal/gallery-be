@@ -4,7 +4,7 @@ public class PhotoDTO {
     private String id;
     private String title;
     private String description;
-    private String fileId;
+    private String filename;
 
     public PhotoDTO() {}
 
@@ -14,7 +14,7 @@ public class PhotoDTO {
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", fileId='" + fileId + '\'' +
+                ", filename='" + filename + '\'' +
                 '}';
     }
 
@@ -42,11 +42,11 @@ public class PhotoDTO {
         this.description = description;
     }
 
-    public String getFileId() {
-        return fileId;
+    public String getFilename() {
+        return filename;
     }
 
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }
