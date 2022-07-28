@@ -25,7 +25,7 @@ public class Photo {
     private String description;
 
     @Column(updatable = true, nullable = false)
-    private String fileId;
+    private String filename;
 
     public Photo() {}
 
@@ -53,11 +53,11 @@ public class Photo {
         this.description = description;
     }
 
-    public String getFileId() {
-        return fileId;
+    public String getFilename() {
+        return filename;
     }
 
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }

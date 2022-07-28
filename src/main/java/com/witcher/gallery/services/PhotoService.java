@@ -15,15 +15,15 @@ import java.util.Optional;
 @Service
 public class PhotoService {
     private final PhotoRepository photoRepository;
-    private final FileService fileService;
+    private final StorageService storageService;
 
     @Autowired
     public PhotoService(
             PhotoRepository photoRepository,
-            FileService fileService
+            StorageService storageService
     ) {
         this.photoRepository = photoRepository;
-        this.fileService = fileService;
+        this.storageService = storageService;
     }
 
     public List<Photo> findAllPhotos() {
@@ -77,8 +77,8 @@ public class PhotoService {
 
     public Photo createPhoto(Photo photo, MultipartFile file) {
 
-        String fileId = this.fileService.storeFile(file);
-        photo.setFileId(fileId);
+        String filename = this.storageService.storeFile(file);
+        photo.setFilename(filename);
 
         Photo savedPhoto = this.photoRepository.save(photo);
 
@@ -86,12 +86,15 @@ public class PhotoService {
     }
 
     public Photo updatePhoto(String photoId, Photo photo, MultipartFile file) {
+        if(!photoId.equals(photo.getId()))
+            throw new RuntimeException("Photo id mismatches the id of the entity!");
+
         Photo toModify = this.findPhotoById(photoId);
 
         if(file != null) {
-            this.fileService.deleteFileById(toModify.getFileId());
-            String fileId = this.fileService.storeFile(file);
-            photo.setFileId(fileId);
+            this.storageService.deleteFile(toModify.getFilename());
+            String filename = this.storageService.storeFile(file);
+            photo.setFilename(filename);
         }
 
         if(!toModify.getTitle().equals(photo.getTitle()))
@@ -100,8 +103,8 @@ public class PhotoService {
         if(!toModify.getDescription().equals(photo.getDescription()))
             toModify.setDescription(photo.getDescription());
 
-        if(photo.getFileId() != null && !toModify.getFileId().equals(photo.getFileId()))
-            toModify.setFileId(photo.getFileId());
+        if(photo.getFilename() != null && !toModify.getFilename().equals(photo.getFilename()))
+            toModify.setFilename(photo.getFilename());
 
         Photo modifiedPhoto = this.photoRepository.save(toModify);
 
@@ -112,11 +115,11 @@ public class PhotoService {
         Photo photo = this.findPhotoById(photoId);
 
         this.photoRepository.deleteById(photoId);
-        this.fileService.deleteFileById(photo.getFileId());
+        this.storageService.deleteFile(photo.getFilename());
     }
 
     public void deleteAllPhotos() {
         this.photoRepository.deleteAll();
-        fileService.deleteAllFiles();
+        storageService.deleteAllFiles();
     }
 }
