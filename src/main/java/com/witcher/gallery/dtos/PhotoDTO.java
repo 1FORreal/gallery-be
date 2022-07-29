@@ -1,10 +1,14 @@
 package com.witcher.gallery.dtos;
 
+import java.util.Date;
+
 public class PhotoDTO {
     private String id;
     private String title;
     private String description;
     private String filename;
+    private Date creationDate;
+    private Date lastModificationDate;
 
     public PhotoDTO() {}
 
@@ -15,6 +19,8 @@ public class PhotoDTO {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", filename='" + filename + '\'' +
+                ", creationDate=" + creationDate +
+                ", lastModificationDate=" + lastModificationDate +
                 '}';
     }
 
@@ -48,5 +54,21 @@ public class PhotoDTO {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getLastModificationDate() {
+        return lastModificationDate;
+    }
+
+    public void setLastModificationDate(Date lastModificationDate) {
+        this.lastModificationDate = lastModificationDate;
     }
 }
