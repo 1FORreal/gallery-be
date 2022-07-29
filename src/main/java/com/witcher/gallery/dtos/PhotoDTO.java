@@ -1,5 +1,7 @@
 package com.witcher.gallery.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 public class PhotoDTO {
@@ -7,6 +9,7 @@ public class PhotoDTO {
     private String title;
     private String description;
     private String filename;
+    private Long filesize;
     private Date creationDate;
     private Date lastModificationDate;
 
@@ -19,6 +22,7 @@ public class PhotoDTO {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", filename='" + filename + '\'' +
+                ", filesize='" + filesize + '\'' +
                 ", creationDate=" + creationDate +
                 ", lastModificationDate=" + lastModificationDate +
                 '}';
@@ -54,6 +58,15 @@ public class PhotoDTO {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public Long getFilesize() {
+        return filesize;
+    }
+
+    @JsonIgnore
+    public void setFilesize(Long filesize) {
+        this.filesize = filesize;
     }
 
     public Date getCreationDate() {

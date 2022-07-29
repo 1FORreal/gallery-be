@@ -27,6 +27,9 @@ public class Photo {
     @Column(updatable = true, nullable = false)
     private String filename;
 
+    @Column(updatable = true, nullable = false)
+    private Long filesize;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date")
@@ -69,6 +72,14 @@ public class Photo {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public Long getFilesize() {
+        return filesize;
+    }
+
+    public void setFilesize(Long filesize) {
+        this.filesize = filesize;
     }
 
     public Date getCreationDate() {

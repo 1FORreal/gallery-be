@@ -52,7 +52,6 @@ public class PhotoService {
         return photos;
     }
 
-
     public List<Photo> findAllPhotosSortedByTitle(Order order) {
         Sort sortingOrder = Sort.by("title");
 
@@ -76,10 +75,10 @@ public class PhotoService {
     }
 
     public Photo createPhoto(Photo photo, MultipartFile file) {
-
         String filename = this.storageService.storeFile(file);
-        photo.setFilename(filename);
 
+        photo.setFilename(filename);
+        photo.setFilesize(file.getSize());
         Photo savedPhoto = this.photoRepository.save(photo);
 
         return savedPhoto;
@@ -95,6 +94,7 @@ public class PhotoService {
             this.storageService.deleteFile(toModify.getFilename());
             String filename = this.storageService.storeFile(file);
             photo.setFilename(filename);
+            toModify.setFilesize(file.getSize());
         }
 
         if(!toModify.getTitle().equals(photo.getTitle()))
