@@ -9,7 +9,7 @@ public class PhotoDTO {
     private String title;
     private String description;
     private String filename;
-    private Long filesize;
+    @JsonIgnore private Long filesize;
     private Date creationDate;
     private Date lastModificationDate;
 
@@ -64,7 +64,6 @@ public class PhotoDTO {
         return filesize;
     }
 
-    @JsonIgnore
     public void setFilesize(Long filesize) {
         this.filesize = filesize;
     }
