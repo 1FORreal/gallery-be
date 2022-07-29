@@ -84,7 +84,7 @@ public class StorageService {
     }
 
     public void deleteFile(String filename) {
-        File file = new File(new String(this.rootLocation.toString() + "/" + filename));
+        File file = new File(this.rootLocation.resolve(filename).toString());
 
         if(file.exists())
             if(file.delete())
