@@ -1,4 +1,4 @@
-package com.witcher.gallery.entities;
+package com.witcher.gallery.models.entities;
 
 import org.hibernate.annotations.GenericGenerator;
 

@@ -1,6 +1,6 @@
 package com.witcher.gallery.services;
 
-import com.witcher.gallery.entities.User;
+import com.witcher.gallery.models.entities.User;
 import com.witcher.gallery.repositories.UserRepository;
 import com.witcher.gallery.security.SecurityUser;
 import org.springframework.beans.factory.annotation.Autowired;

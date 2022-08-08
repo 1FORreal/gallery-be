@@ -1,4 +1,4 @@
-package com.witcher.gallery.dtos;
+package com.witcher.gallery.models.dtos;
 
 public class UserDTO {
     private String id;

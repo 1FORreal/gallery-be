@@ -1,7 +1,7 @@
 package com.witcher.gallery.controllers;
 
-import com.witcher.gallery.dtos.UserDTO;
-import com.witcher.gallery.entities.User;
+import com.witcher.gallery.models.dtos.UserDTO;
+import com.witcher.gallery.models.entities.User;
 import com.witcher.gallery.services.JpaUserDetailsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

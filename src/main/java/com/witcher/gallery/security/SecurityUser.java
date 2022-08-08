@@ -1,6 +1,6 @@
 package com.witcher.gallery.security;
 
-import com.witcher.gallery.entities.User;
+import com.witcher.gallery.models.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
