@@ -2,7 +2,7 @@ package com.witcher.gallery.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.witcher.gallery.models.dtos.PhotoDTO;
+import com.witcher.gallery.models.dtos.PhotoDto;
 import com.witcher.gallery.enums.Order;
 import com.witcher.gallery.models.entities.Photo;
 import com.witcher.gallery.services.PhotoService;
@@ -42,11 +42,11 @@ public class PhotoController {
     @GetMapping
     public ResponseEntity<HttpStatus> getAllPhotos() {
         List<Photo> photos = this.photoService.findAllPhotos();
-        List<PhotoDTO> photoDTOs = new ArrayList<>();
+        List<PhotoDto> photoDtos = new ArrayList<>();
 
-        photos.forEach(photo -> photoDTOs.add(this.modelMapper.map(photo, PhotoDTO.class)));
+        photos.forEach(photo -> photoDtos.add(this.modelMapper.map(photo, PhotoDto.class)));
 
-        ResponseEntity<HttpStatus> responseEntity = new ResponseEntity(photoDTOs, HttpStatus.OK);
+        ResponseEntity<HttpStatus> responseEntity = new ResponseEntity(photoDtos, HttpStatus.OK);
 
         return responseEntity;
     }
@@ -74,11 +74,11 @@ public class PhotoController {
 
 
         List<Photo> photos = this.photoService.findAllPhotosSortedByTitle(defaultOrder);
-        List<PhotoDTO> photoDTOs = new ArrayList();
+        List<PhotoDto> photoDtos = new ArrayList();
 
-        photos.forEach(photo -> photoDTOs.add(this.modelMapper.map(photo, PhotoDTO.class)));
+        photos.forEach(photo -> photoDtos.add(this.modelMapper.map(photo, PhotoDto.class)));
 
-        return new ResponseEntity(photoDTOs, HttpStatus.OK);
+        return new ResponseEntity(photoDtos, HttpStatus.OK);
     }
 
     @GetMapping("/{photo_id}")
@@ -86,7 +86,7 @@ public class PhotoController {
         @PathVariable("photo_id") String photoId
     ) {
         Photo photo = this.photoService.findPhotoById(photoId);
-        PhotoDTO photoDTO = this.modelMapper.map(photo, PhotoDTO.class);
+        PhotoDto photoDTO = this.modelMapper.map(photo, PhotoDto.class);
         ResponseEntity<HttpStatus> responseEntity = new ResponseEntity(photoDTO, HttpStatus.OK);
 
         return responseEntity;
@@ -97,18 +97,18 @@ public class PhotoController {
             @RequestParam("photo_details") String photoDetails, // looking for a way to automatically convert String photoDetails to PhotoDTO class
             @RequestParam("file") MultipartFile file
     ) {
-        PhotoDTO photoDTO = null;
+        PhotoDto photoDTO = null;
 
         try {
-            photoDTO = this.objectMapper.readValue(photoDetails, PhotoDTO.class);
+            photoDTO = this.objectMapper.readValue(photoDetails, PhotoDto.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
         Photo photo = this.modelMapper.map(photoDTO, Photo.class);
         Photo savedPhoto = this.photoService.createPhoto(photo, file);
-        PhotoDTO savedPhotoDTO = this.modelMapper.map(savedPhoto, PhotoDTO.class);
-        ResponseEntity<HttpStatus> responseEntity = new ResponseEntity(savedPhotoDTO, HttpStatus.CREATED);
+        PhotoDto savedPhotoDto = this.modelMapper.map(savedPhoto, PhotoDto.class);
+        ResponseEntity<HttpStatus> responseEntity = new ResponseEntity(savedPhotoDto, HttpStatus.CREATED);
 
         return responseEntity;
     }
@@ -119,18 +119,18 @@ public class PhotoController {
             @RequestParam("photo_details") String photoDetails,
             @RequestParam(name = "file", required = false) MultipartFile file
     ) {
-        PhotoDTO photoDTO = null;
+        PhotoDto photoDTO = null;
 
         try {
-            photoDTO = this.objectMapper.readValue(photoDetails, PhotoDTO.class);
+            photoDTO = this.objectMapper.readValue(photoDetails, PhotoDto.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
         Photo photo = this.modelMapper.map(photoDTO, Photo.class);
         Photo updatedPhoto = this.photoService.updatePhoto(photoId, photo, file);
-        PhotoDTO updatedPhotoDTO = this.modelMapper.map(updatedPhoto, PhotoDTO.class);
-        ResponseEntity<HttpStatus> responseEntity = new ResponseEntity(updatedPhotoDTO, HttpStatus.OK);
+        PhotoDto updatedPhotoDto = this.modelMapper.map(updatedPhoto, PhotoDto.class);
+        ResponseEntity<HttpStatus> responseEntity = new ResponseEntity(updatedPhotoDto, HttpStatus.OK);
 
         return responseEntity;
     }

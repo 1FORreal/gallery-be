@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
 
-public class PhotoDTO {
+public class PhotoDto {
     private String id;
     private String title;
     private String description;
@@ -13,7 +13,7 @@ public class PhotoDTO {
     private Date creationDate;
     private Date lastModificationDate;
 
-    public PhotoDTO() {}
+    public PhotoDto() {}
 
     @Override
     public String toString() {

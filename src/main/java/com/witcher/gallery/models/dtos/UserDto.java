@@ -1,11 +1,11 @@
 package com.witcher.gallery.models.dtos;
 
-public class UserDTO {
+public class UserDto {
     private String id;
     private String username;
     private String password;
 
-    public UserDTO() {}
+    public UserDto() {}
 
     public String getId() {
         return id;

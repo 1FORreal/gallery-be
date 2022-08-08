@@ -1,6 +1,6 @@
 package com.witcher.gallery.controllers;
 
-import com.witcher.gallery.models.dtos.UserDTO;
+import com.witcher.gallery.models.dtos.UserDto;
 import com.witcher.gallery.models.entities.User;
 import com.witcher.gallery.services.JpaUserDetailsService;
 import org.modelmapper.ModelMapper;
@@ -28,13 +28,13 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<HttpStatus> createUser(@RequestBody UserDto userDTO) {
         User user = this.modelMapper.map(userDTO, User.class);
 
         User savedUser = this.jpaUserDetailsService.createUser(user);
-        UserDTO savedUserDTO = this.modelMapper.map(savedUser, UserDTO.class);
+        UserDto savedUserDto = this.modelMapper.map(savedUser, UserDto.class);
 
-        ResponseEntity<HttpStatus> responseEntity = new ResponseEntity(savedUserDTO, HttpStatus.OK);
+        ResponseEntity<HttpStatus> responseEntity = new ResponseEntity(savedUserDto, HttpStatus.OK);
         return responseEntity;
     }
 }
