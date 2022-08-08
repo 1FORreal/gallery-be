@@ -1,32 +1,46 @@
-package com.witcher.gallery.dtos;
+package com.witcher.gallery.models.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.*;
 import java.util.Date;
 
-public class PhotoDTO {
+@Entity
+public class Photo {
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(updatable = false, nullable = false)
     private String id;
+
+    @Column(updatable = true, nullable = false)
     private String title;
+
+    @Column(updatable = true, nullable = false)
     private String description;
+
+    @Column(updatable = true, nullable = false)
     private String filename;
-    @JsonIgnore private Long filesize;
+
+    @Column(updatable = true, nullable = false)
+    private Long filesize;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_date")
     private Date creationDate;
+
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "modify_date")
     private Date lastModificationDate;
 
-    public PhotoDTO() {}
-
-    @Override
-    public String toString() {
-        return "PhotoDTO{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", filename='" + filename + '\'' +
-                ", filesize='" + filesize + '\'' +
-                ", creationDate=" + creationDate +
-                ", lastModificationDate=" + lastModificationDate +
-                '}';
-    }
+    public Photo() {}
 
     public String getId() {
         return id;

@@ -2,9 +2,9 @@ package com.witcher.gallery.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.witcher.gallery.dtos.PhotoDTO;
+import com.witcher.gallery.models.dtos.PhotoDTO;
 import com.witcher.gallery.enums.Order;
-import com.witcher.gallery.entities.Photo;
+import com.witcher.gallery.models.entities.Photo;
 import com.witcher.gallery.services.PhotoService;
 import com.witcher.gallery.util.MyMapper;
 import org.modelmapper.ModelMapper;
