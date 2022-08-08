@@ -1,7 +1,7 @@
 package com.witcher.gallery.services;
 
 import com.witcher.gallery.enums.Order;
-import com.witcher.gallery.entities.Photo;
+import com.witcher.gallery.models.entities.Photo;
 import com.witcher.gallery.repositories.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

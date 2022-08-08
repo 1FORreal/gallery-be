@@ -1,6 +1,6 @@
 package com.witcher.gallery.repositories;
 
-import com.witcher.gallery.entities.Photo;
+import com.witcher.gallery.models.entities.Photo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
