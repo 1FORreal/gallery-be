@@ -2,39 +2,49 @@ package com.witcher.gallery.controllers;
 
 import com.witcher.gallery.models.dtos.UserDto;
 import com.witcher.gallery.models.entities.User;
-import com.witcher.gallery.services.JpaUserDetailsService;
+import com.witcher.gallery.services.CustomUserDetailsManager;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final JpaUserDetailsService jpaUserDetailsService;
+    private final CustomUserDetailsManager customUserDetailsManager;
     private final ModelMapper modelMapper;
 
     @Autowired
     public UserController(
-            JpaUserDetailsService jpaUserDetailsService,
+            CustomUserDetailsManager customUserDetailsManager,
             ModelMapper modelMapper
     ) {
-        this.jpaUserDetailsService = jpaUserDetailsService;
+        this.customUserDetailsManager = customUserDetailsManager;
         this.modelMapper = modelMapper;
     }
 
     @PostMapping
     public ResponseEntity<HttpStatus> createUser(@RequestBody UserDto userDTO) {
-        User user = this.modelMapper.map(userDTO, User.class);
+        UserDetails user = this.modelMapper.map(userDTO, UserDetails.class);
 
-        User savedUser = this.jpaUserDetailsService.createUser(user);
-        UserDto savedUserDto = this.modelMapper.map(savedUser, UserDto.class);
+        this.customUserDetailsManager.createUser(user);
 
-        ResponseEntity<HttpStatus> responseEntity = new ResponseEntity(savedUserDto, HttpStatus.OK);
+        ResponseEntity<HttpStatus> responseEntity = new ResponseEntity( HttpStatus.OK);
         return responseEntity;
+    }
+
+    @GetMapping
+    public ResponseEntity<HttpStatus> getUser() {
+        List<User> users = this.customUserDetailsManager.findAllUsers();
+        List<UserDto> userDtos = new LinkedList<>();
+
+        users.forEach(user -> userDtos.add(this.modelMapper.map(user, UserDto.class)));
+
+        return new ResponseEntity(userDtos, HttpStatus.OK);
     }
 }
