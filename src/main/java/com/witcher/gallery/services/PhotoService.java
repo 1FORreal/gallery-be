@@ -1,6 +1,7 @@
 package com.witcher.gallery.services;
 
 import com.witcher.gallery.enums.Order;
+import com.witcher.gallery.models.entities.FileProperties;
 import com.witcher.gallery.models.entities.Photo;
 import com.witcher.gallery.repositories.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,8 +78,11 @@ public class PhotoService {
     public Photo createPhoto(Photo photo, MultipartFile file) {
         String filename = this.storageService.storeFile(file);
 
-        photo.setFilename(filename);
-        photo.setFilesize(file.getSize());
+        FileProperties fileProperties = new FileProperties();
+        fileProperties.setFilename(filename);
+        fileProperties.setFilesize(file.getSize());
+        photo.setFileProperties(fileProperties);
+
         Photo savedPhoto = this.photoRepository.save(photo);
 
         return savedPhoto;
@@ -91,10 +95,10 @@ public class PhotoService {
         Photo toModify = this.findPhotoById(photoId);
 
         if(file != null) {
-            this.storageService.deleteFile(toModify.getFilename());
+            this.storageService.deleteFile(toModify.getFileProperties().getFilename());
             String filename = this.storageService.storeFile(file);
-            photo.setFilename(filename);
-            toModify.setFilesize(file.getSize());
+            photo.getFileProperties().setFilename(filename);
+            toModify.getFileProperties().setFilesize(file.getSize());
         }
 
         if(!toModify.getTitle().equals(photo.getTitle()))
@@ -103,8 +107,8 @@ public class PhotoService {
         if(!toModify.getDescription().equals(photo.getDescription()))
             toModify.setDescription(photo.getDescription());
 
-        if(photo.getFilename() != null && !toModify.getFilename().equals(photo.getFilename()))
-            toModify.setFilename(photo.getFilename());
+        if(photo.getFileProperties().getFilename() != null && !toModify.getFileProperties().getFilename().equals(photo.getFileProperties().getFilename()))
+            toModify.getFileProperties().setFilename(photo.getFileProperties().getFilename());
 
         Photo modifiedPhoto = this.photoRepository.save(toModify);
 
@@ -115,7 +119,7 @@ public class PhotoService {
         Photo photo = this.findPhotoById(photoId);
 
         this.photoRepository.deleteById(photoId);
-        this.storageService.deleteFile(photo.getFilename());
+        this.storageService.deleteFile(photo.getFileProperties().getFilename());
     }
 
     public void deleteAllPhotos() {

@@ -45,7 +45,7 @@ public class StorageService {
             throw new RuntimeException("Invalid original filename!");
         }
 
-        if(!FilenameUtils.isExtension(file.getOriginalFilename(), List.of("svg","jpg")))
+        if(!FilenameUtils.isExtension(file.getOriginalFilename(), List.of("svg","jpg","png")))
             throw new RuntimeException("Invalid file extension");
 
 
