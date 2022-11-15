@@ -1,8 +1,8 @@
 package com.witcher.gallery.services;
 
-import com.witcher.gallery.project_config.StorageProperties;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -20,10 +20,15 @@ import java.util.UUID;
 @Service
 public class StorageService {
     private final Path rootLocation;
+    private final List<String> allowedFileExtensions;
 
-    @Autowired
-    public StorageService(StorageProperties storageProperties) {
-        this.rootLocation = Paths.get(storageProperties.getLocation());
+
+    public StorageService(
+            @Value("${storage.location:/uploads}") final String stringLocation,
+            @Value("${storage.allowed-file-extensions}") final String[] allowedFileExtensionsArray
+    ) {
+        this.rootLocation = Paths.get(stringLocation);
+        this.allowedFileExtensions = List.of(allowedFileExtensionsArray);
 
         this.init();
     }
@@ -36,23 +41,23 @@ public class StorageService {
         }
     }
 
-    public String storeFile(MultipartFile file){
-        if(file.isEmpty()) {
-            throw new RuntimeException("Invalid file content!");
-        }
-
-        if(file.getOriginalFilename().contains("..")) {
-            throw new RuntimeException("Invalid original filename!");
-        }
-
-        if(!FilenameUtils.isExtension(file.getOriginalFilename(), List.of("svg","jpg","png")))
-            throw new RuntimeException("Invalid file extension");
-
-
+    private String generateRandomFilenameUUID(MultipartFile file) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 
         String fileUUID = UUID.randomUUID().toString();
         String filename = fileUUID + "." + extension;
+
+        return filename;
+    }
+
+    public String storeFile(MultipartFile file){
+        if(file.isEmpty()) throw new RuntimeException("Invalid file content!");
+
+        if(file.getOriginalFilename().contains("..")) throw new RuntimeException("Invalid original filename!");
+
+        if(!FilenameUtils.isExtension(file.getOriginalFilename(), this.allowedFileExtensions)) throw new RuntimeException("Invalid file extension");
+
+        String filename = this.generateRandomFilenameUUID(file);
 
         try (InputStream inputStream = file.getInputStream()){
             Files.copy(inputStream, this.rootLocation.resolve(filename));
@@ -87,10 +92,9 @@ public class StorageService {
         File file = new File(this.rootLocation.resolve(filename).toString());
 
         if(file.exists())
-            if(file.delete())
-                return;
-        else
-            throw new RuntimeException("File not found!");
+            if(file.delete()) return;
+
+        else throw new RuntimeException("File not found!");
     }
 
     public void deleteAllFiles() {
