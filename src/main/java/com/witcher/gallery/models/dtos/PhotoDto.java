@@ -8,8 +8,8 @@ public class PhotoDto {
     private String id;
     private String title;
     private String description;
-    private String filename;
-    @JsonIgnore private Long filesize;
+
+    private FilePropertiesDto fileProperties;
     private Date creationDate;
     private Date lastModificationDate;
 
@@ -17,12 +17,11 @@ public class PhotoDto {
 
     @Override
     public String toString() {
-        return "PhotoDTO{" +
+        return "PhotoDto{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", filename='" + filename + '\'' +
-                ", filesize='" + filesize + '\'' +
+                ", filePropertiesDto=" + fileProperties +
                 ", creationDate=" + creationDate +
                 ", lastModificationDate=" + lastModificationDate +
                 '}';
@@ -52,20 +51,12 @@ public class PhotoDto {
         this.description = description;
     }
 
-    public String getFilename() {
-        return filename;
+    public FilePropertiesDto getFileProperties() {
+        return fileProperties;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public Long getFilesize() {
-        return filesize;
-    }
-
-    public void setFilesize(Long filesize) {
-        this.filesize = filesize;
+    public void setFileProperties(FilePropertiesDto fileProperties) {
+        this.fileProperties = fileProperties;
     }
 
     public Date getCreationDate() {
