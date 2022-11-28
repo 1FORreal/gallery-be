@@ -3,10 +3,8 @@ package com.witcher.gallery.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.witcher.gallery.models.dtos.PhotoDto;
-import com.witcher.gallery.enums.Order;
 import com.witcher.gallery.models.entities.Photo;
 import com.witcher.gallery.services.PhotoService;
-import com.witcher.gallery.util.MyMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,29 +17,31 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/photos")
+@CrossOrigin
 public class PhotoController {
     private final PhotoService photoService;
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
-    private final MyMapper myMapper;
 
     @Autowired
     public PhotoController(
             PhotoService photoService,
             ModelMapper modelMapper,
-            ObjectMapper objectMapper,
-            MyMapper orderMapper
+            ObjectMapper objectMapper
     ) {
         this.photoService = photoService;
 
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
-        this.myMapper = orderMapper;
     }
 
     @GetMapping
-    public ResponseEntity<HttpStatus> getAllPhotos() {
-        List<Photo> photos = this.photoService.findAllPhotos();
+    public ResponseEntity<HttpStatus> getAllPhotos(
+            @RequestParam(name = "page_number", defaultValue = "0") Integer pageNumber,
+            @RequestParam(name = "page_size", defaultValue = "100") Integer pageSize,
+            @RequestParam(name = "sort_properties", required = false) List<String> sortProperties
+    ) {
+        List<Photo> photos = this.photoService.findAllPhotos(pageNumber, pageSize, sortProperties);
         List<PhotoDto> photoDtos = new ArrayList<>();
 
         photos.forEach(photo -> photoDtos.add(this.modelMapper.map(photo, PhotoDto.class)));
@@ -49,36 +49,6 @@ public class PhotoController {
         ResponseEntity<HttpStatus> responseEntity = new ResponseEntity(photoDtos, HttpStatus.OK);
 
         return responseEntity;
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<HttpStatus> getSomePhotosWithWordsInTitle(
-            @RequestParam(name="words") List<String> words
-    ) {
-        List<Photo> photos = this.photoService.findAllPhotosByWordsInTitle(words);
-        ResponseEntity responseEntity = new ResponseEntity(photos, HttpStatus.OK);
-
-        return responseEntity;
-    }
-
-    @GetMapping("/sorted")
-    public ResponseEntity<HttpStatus> getAllPhotosSortedByTitle(
-            @RequestParam(name="sorting", required = false) String order
-    ) {
-        Order defaultOrder;
-
-        if(order == null)
-            defaultOrder = Order.ASCENDING;
-        else
-            defaultOrder = this.myMapper.convertToOrder(order);
-
-
-        List<Photo> photos = this.photoService.findAllPhotosSortedByTitle(defaultOrder);
-        List<PhotoDto> photoDtos = new ArrayList();
-
-        photos.forEach(photo -> photoDtos.add(this.modelMapper.map(photo, PhotoDto.class)));
-
-        return new ResponseEntity(photoDtos, HttpStatus.OK);
     }
 
     @GetMapping("/{photo_id}")

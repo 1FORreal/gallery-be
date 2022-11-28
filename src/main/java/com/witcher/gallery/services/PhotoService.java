@@ -1,10 +1,12 @@
 package com.witcher.gallery.services;
 
-import com.witcher.gallery.enums.Order;
 import com.witcher.gallery.models.entities.FileProperties;
 import com.witcher.gallery.models.entities.Photo;
 import com.witcher.gallery.repositories.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class PhotoService {
     private final PhotoRepository photoRepository;
     private final StorageService storageService;
+    private final static Sort DEFAULT_SORT = Sort.by("creationDate").ascending();
 
     @Autowired
     public PhotoService(
@@ -27,43 +30,18 @@ public class PhotoService {
         this.storageService = storageService;
     }
 
-    public List<Photo> findAllPhotos() {
-        List<Photo> photos = new ArrayList();
+    public List<Photo> findAllPhotos(
+            Integer pageNumber,
+            Integer pageSize,
+            List<String> sortProperties
+    ) {
+        Sort sort = this.constructSort(sortProperties);
 
-        this.photoRepository.findAll().iterator().forEachRemaining(photo -> photos.add(photo));
-        return photos;
-    }
+        Pageable pageRequest = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Photo> pageResult = this.photoRepository.findAll(pageRequest);
 
-    public List<Photo> findAllPhotosByWordsInTitle(List<String> words) {
-        List<Photo> photos = new ArrayList();
-        List<Photo> allPhotos = this.findAllPhotos();
-
-        for(Photo photo : allPhotos)
-            for(String word : words) {
-                if (photos.contains(photo))
-                    continue;
-
-                if (photo.getTitle().contains(word)) {
-                    photos.add(photo);
-                    break;
-                }
-            }
-
-
-        return photos;
-    }
-
-    public List<Photo> findAllPhotosSortedByTitle(Order order) {
-        Sort sortingOrder = Sort.by("title");
-
-        if(order.equals(order.ASCENDING))
-            sortingOrder = sortingOrder.ascending();
-        else
-            sortingOrder = sortingOrder.descending();
-
-        List<Photo> photos = this.photoRepository.findAll(sortingOrder);
-
-        return photos;
+        if(!pageResult.hasContent()) return new ArrayList<Photo>();
+        return pageResult.getContent();
     }
 
     public Photo findPhotoById(String photoId) {
@@ -125,5 +103,21 @@ public class PhotoService {
     public void deleteAllPhotos() {
         this.photoRepository.deleteAll();
         storageService.deleteAllFiles();
+    }
+
+    private Sort constructSort(List<String> sortProperties) {
+        if(sortProperties == null || sortProperties.size() <= 0) return DEFAULT_SORT;
+
+        Sort sort = Sort.unsorted();
+        for(String s : sortProperties) {
+            Integer separatorIndex = (s.indexOf('_') == -1 ? s.length() : s.indexOf('_'));
+            String property = s.substring(0, separatorIndex);
+            String sortDirection = s.substring((separatorIndex + 1 > s.length() ? null : separatorIndex + 1));
+            Sort.Direction direction = (sortDirection == null || sortDirection.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC);
+
+            sort = sort.and(Sort.by(direction, property));
+        }
+
+        return sort;
     }
 }
