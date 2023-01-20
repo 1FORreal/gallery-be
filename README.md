@@ -1,4 +1,5 @@
 # gallery
 
-This is a CRUD application for uploading and receiving images of a specific format. A "Photo" entity will be created for each file arriving on the backend. The application
-implements operations like rea, update, create, delete.
+This is a Web Application build in Java with Spring for uploading and receiving images of a specific format.
+
+The purpose of this project was learning of file handling on a HTTP server (storing files on local server, mapping files to database entities, transmitting files over HTTP).
