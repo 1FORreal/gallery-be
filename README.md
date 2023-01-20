@@ -1,4 +1,4 @@
-# gallery
+# Gallery Web Application Back-end
 
 This is a Web Application build in Java with Spring for uploading and receiving images of a specific format.
 
